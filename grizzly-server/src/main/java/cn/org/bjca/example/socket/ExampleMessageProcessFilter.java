@@ -34,28 +34,7 @@ public class ExampleMessageProcessFilter extends BaseFilter {
     ctx.write(
         peerAddress,
         responseMessage,
-        new CompletionHandler<WriteResult>() {
-          @Override
-          public void cancelled() {
-            System.out.println("ExampleMessageProcessFilter.cancelled");
-          }
-
-          @Override
-          public void failed(Throwable throwable) {
-            System.out.println("ExampleMessageProcessFilter.failed");
-          }
-
-          @Override
-          public void completed(WriteResult result) {
-            System.out.println("ExampleMessageProcessFilter.completed");
-            result.getConnection().close();
-          }
-
-          @Override
-          public void updated(WriteResult result) {
-            System.out.println("ExampleMessageProcessFilter.updated");
-          }
-        });
+        null);
     return ctx.getStopAction();
   }
 }
