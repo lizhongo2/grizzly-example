@@ -27,6 +27,19 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.0.13</version>
+    </dependency>
+      <dependency>
+          <groupId>org.projectlombok</groupId>
+          <artifactId>lombok</artifactId>
+          <version>1.18.4</version>
+          <scope>provided</scope>
+          <optional>true</optional>
+      </dependency>
+    <!--对 restful的支持-->
   </dependencies>
 <dependencyManagement>
   <dependencies>
@@ -36,11 +49,6 @@
       <version>${grizzly-version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.glassfish.grizzly</groupId>
-      <artifactId>grizzly-http-server</artifactId>
-      <version>${grizzly-version}</version>
-    </dependency>
 
     <dependency>
       <groupId>org.glassfish.grizzly</groupId>
@@ -53,6 +61,28 @@
       <artifactId>grizzly-http-servlet</artifactId>
       <version>${grizzly-version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.grizzly</groupId>
+      <artifactId>grizzly-framework-monitoring</artifactId>
+      <version>${grizzly-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.grizzly</groupId>
+      <artifactId>grizzly-http-monitoring</artifactId>
+      <version>${grizzly-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.grizzly</groupId>
+      <artifactId>grizzly-http-server-monitoring</artifactId>
+      <version>${grizzly-version}</version>
+    </dependency>
+
+
+
+
 
     <dependency>
       <groupId>org.glassfish.grizzly</groupId>
@@ -71,6 +101,7 @@
     <module>grizzly-server</module>
     <module>webservice-client</module>
       <module>socket-client</module>
+      <module>restful-client</module>
   </modules>
 
 </project>

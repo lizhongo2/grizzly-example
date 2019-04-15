@@ -50,6 +50,7 @@ public class ExampleMessageParseFilter extends BaseFilter {
     buffer.get(content);
     message.setContent(content);
     ctx.setMessage(message);
+    buffer.dispose();
     return ctx.getInvokeAction(remainder);
   }
 

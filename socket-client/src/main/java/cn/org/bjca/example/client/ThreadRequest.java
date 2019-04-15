@@ -1,63 +1,51 @@
 package cn.org.bjca.example.client;
 
 import cn.org.bjca.example.socket.ExampleMessage;
+import lombok.extern.slf4j.Slf4j;
+import org.glassfish.grizzly.Buffer;
 import org.glassfish.grizzly.Connection;
 import org.glassfish.grizzly.GrizzlyFuture;
-import org.glassfish.grizzly.ReadResult;
 import org.glassfish.grizzly.WriteResult;
-import org.glassfish.grizzly.impl.FutureImpl;
+import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * @author lizhong
  * @create：2019-04-09 下午 03:01
  */
+@Slf4j
 public class ThreadRequest extends Thread {
-  Future<Connection> connectFuture;
+  TCPNIOTransport tcpnioTransport;
   private CountDownLatch countDownLatch;
 
   public ThreadRequest(
-      String name, Future<Connection> connectFuture, CountDownLatch countDownLatch) {
+      String name, TCPNIOTransport tcpnioTransport, CountDownLatch countDownLatch) {
     super(name);
-    this.connectFuture = connectFuture;
+    this.tcpnioTransport = tcpnioTransport;
     this.countDownLatch = countDownLatch;
   }
 
   @Override
   public void run() {
     Connection connection = null;
-    try {
-      while (true) {
-        connection = connectFuture.get();
-        connection.configureBlocking(false);
+    while (true) {
+      try {
+        connection = tcpnioTransport.connect("localhost", 8080).get();
         ExampleMessage exampleMessage = new ExampleMessage();
         exampleMessage.setHead(getName().getBytes("utf-8"));
         exampleMessage.setContent(getName().getBytes("utf-8"));
-        GrizzlyFuture<WriteResult> writeResultGrizzlyFuture = connection.write(exampleMessage);
-        WriteResult writeResult = writeResultGrizzlyFuture.get();
-        int writeSize = (int) writeResult.getWrittenSize();
-        System.out.println("writerSize:" + writeSize);
-        GrizzlyFuture<ReadResult> readResultGrizzlyFuture = connection.read();
-        ReadResult readResult = readResultGrizzlyFuture.get();
-        ExampleMessage readResultMessage = (ExampleMessage) readResult.getMessage();
-        System.out.println("服务端返回内容：");
-        System.out.println(
-            "head:"
-                + readResultMessage.getHeadByUtf8()
-                + " content:"
-                + readResultMessage.getContentByUtf8());
-        Thread.sleep(2000);
+        connection.write(exampleMessage);
+        Thread.sleep(1000);
+      } catch (Exception e) {
+        e.printStackTrace();
+        countDownLatch.countDown();
+        break;
+      } finally {
+        if (connection != null) {
+          connection.close();
+        }
       }
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      if (connection != null) {
-        connection.close();
-      }
-      countDownLatch.countDown();
     }
   }
 }

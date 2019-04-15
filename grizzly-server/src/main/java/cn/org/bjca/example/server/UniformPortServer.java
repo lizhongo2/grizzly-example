@@ -1,4 +1,4 @@
-package cn.org.bjca.example;
+package cn.org.bjca.example.server;
 
 import cn.org.bjca.example.socket.SocketFucSetup;
 import cn.org.bjca.example.webservice.WebServiceExampleService;
@@ -11,6 +11,9 @@ import java.io.IOException;
 /**
  * Unified port server can use one port to provide various types of services such as restful
  * service,webservice service,socket service and so on
+ * <p>
+ *     此服务器支持 socket 和 webservice 在同一个端口交互
+ * </p>
  */
 public class UniformPortServer {
 
@@ -25,10 +28,14 @@ public class UniformPortServer {
 
       //增加功能，使httpServer 能够处理 socket通信
       networkListener.registerAddOn(new SocketFucSetup());
+      //控制连接最大活动时间，超过此时间释放
+      networkListener.getKeepAlive().setIdleTimeoutInSeconds(30);
       httpServer.addListener(networkListener);
       //处理http 协议相关 1 增加webservice 处理器
       httpServer.getServerConfiguration().
               addHttpHandler(new JaxwsHandler(new WebServiceExampleService()),"/hello");
+      //开启监控
+      httpServer.getServerConfiguration().setJmxEnabled(true);
       httpServer.start();
       while (true){
           byte[] bytes=new byte[1024];
