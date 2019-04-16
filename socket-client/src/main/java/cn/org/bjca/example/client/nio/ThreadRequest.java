@@ -1,4 +1,4 @@
-package cn.org.bjca.example.client;
+package cn.org.bjca.example.client.nio;
 
 import cn.org.bjca.example.socket.ExampleMessage;
 import lombok.extern.slf4j.Slf4j;

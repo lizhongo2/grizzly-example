@@ -1,4 +1,4 @@
-package cn.org.bjca.example.client;
+package cn.org.bjca.example.client.nio;
 
 import cn.org.bjca.example.socket.ExampleMessageParseFilter;
 import org.glassfish.grizzly.filterchain.FilterChainBuilder;
